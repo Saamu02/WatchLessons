@@ -11,7 +11,7 @@
 		04A914E929AF1D8200AB760C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A914E729AF1D8200AB760C /* DetailViewController.swift */; };
 		04A914EA29AF1D8200AB760C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A914E729AF1D8200AB760C /* DetailViewController.swift */; };
 		04BAF05429AF135F00A8B3E7 /* WatchLessonsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BAF05329AF135F00A8B3E7 /* WatchLessonsApp.swift */; };
-		04BAF05629AF135F00A8B3E7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BAF05529AF135F00A8B3E7 /* ContentView.swift */; };
+		04BAF05629AF135F00A8B3E7 /* VideoListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BAF05529AF135F00A8B3E7 /* VideoListsView.swift */; };
 		04BAF05829AF136600A8B3E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BAF05729AF136600A8B3E7 /* Assets.xcassets */; };
 		04BAF05B29AF136600A8B3E7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BAF05A29AF136600A8B3E7 /* Preview Assets.xcassets */; };
 		04BAF06529AF136600A8B3E7 /* WatchLessonsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BAF06429AF136600A8B3E7 /* WatchLessonsTests.swift */; };
@@ -40,7 +40,7 @@
 		04A914E729AF1D8200AB760C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		04BAF05029AF135F00A8B3E7 /* WatchLessons.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchLessons.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BAF05329AF135F00A8B3E7 /* WatchLessonsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLessonsApp.swift; sourceTree = "<group>"; };
-		04BAF05529AF135F00A8B3E7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		04BAF05529AF135F00A8B3E7 /* VideoListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListsView.swift; sourceTree = "<group>"; };
 		04BAF05729AF136600A8B3E7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04BAF05A29AF136600A8B3E7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		04BAF06029AF136600A8B3E7 /* WatchLessonsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchLessonsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,7 +136,7 @@
 		04BAF07E29AF142600A8B3E7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				04BAF05529AF135F00A8B3E7 /* ContentView.swift */,
+				04BAF05529AF135F00A8B3E7 /* VideoListsView.swift */,
 				04A914E729AF1D8200AB760C /* DetailViewController.swift */,
 			);
 			path = Views;
@@ -287,7 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04A914E829AF1D8200AB760C /* DetailViewController.swift in Sources */,
-				04BAF05629AF135F00A8B3E7 /* ContentView.swift in Sources */,
+				04BAF05629AF135F00A8B3E7 /* VideoListsView.swift in Sources */,
 				04BAF05429AF135F00A8B3E7 /* WatchLessonsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

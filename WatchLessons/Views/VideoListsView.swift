@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct VideoListsView: View {
     
     let posts = [ Post(id: "0", name: "Ussama"), Post(id: "1", name: "Irfan")]
     
@@ -39,7 +39,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        VideoListsView()
     }
 }
 

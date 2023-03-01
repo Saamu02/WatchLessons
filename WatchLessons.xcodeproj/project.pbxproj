@@ -95,7 +95,9 @@
 			isa = PBXGroup;
 			children = (
 				04BAF05329AF135F00A8B3E7 /* WatchLessonsApp.swift */,
-				04BAF05529AF135F00A8B3E7 /* ContentView.swift */,
+				04BAF07F29AF142E00A8B3E7 /* Models */,
+				04BAF07E29AF142600A8B3E7 /* Views */,
+				04BAF08029AF143E00A8B3E7 /* ViewModels */,
 				04BAF05729AF136600A8B3E7 /* Assets.xcassets */,
 				04BAF05929AF136600A8B3E7 /* Preview Content */,
 			);
@@ -125,6 +127,28 @@
 				04BAF07029AF136600A8B3E7 /* WatchLessonsUITestsLaunchTests.swift */,
 			);
 			path = WatchLessonsUITests;
+			sourceTree = "<group>";
+		};
+		04BAF07E29AF142600A8B3E7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				04BAF05529AF135F00A8B3E7 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		04BAF07F29AF142E00A8B3E7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		04BAF08029AF143E00A8B3E7 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

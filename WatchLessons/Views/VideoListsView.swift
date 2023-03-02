@@ -12,10 +12,13 @@ struct VideoListsView: View {
     let posts = [ Post(id: "0", name: "Ussama"), Post(id: "1", name: "Irfan")]
     
     var body: some View {
+        
         NavigationView {
 
             List(posts) { post in
+                
                 NavigationLink (destination: DetailViewControllerRepresentable().navigationBarTitleDisplayMode(.inline) ) {
+                    
                     HStack {
                         Image("test")
                             .resizable()
@@ -26,7 +29,6 @@ struct VideoListsView: View {
                 }
             }
             .listStyle(.plain)
-            
             .navigationBarTitle("Lessons")
         }
         .onAppear {
@@ -38,6 +40,7 @@ struct VideoListsView: View {
 
 
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
         VideoListsView()
     }

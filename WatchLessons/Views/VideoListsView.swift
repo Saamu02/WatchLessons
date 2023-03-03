@@ -9,44 +9,55 @@ import SwiftUI
 
 struct VideoListsView: View {
     
-    let posts = [ Post(id: "0", name: "Ussama"), Post(id: "1", name: "Irfan")]
+    @ObservedObject var lessonsViewModel = LessonsListsViewModel()
     
     var body: some View {
         
-        NavigationView {
+        ZStack {
 
-            List(posts) { post in
-                
-                NavigationLink (destination: DetailViewControllerRepresentable().navigationBarTitleDisplayMode(.inline) ) {
+            NavigationView {
+
+                List(lessonsViewModel.lessons) { lesson in
                     
-                    HStack {
-                        Image("test")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 60, height: 60)
-                        Text("The Key To Success In iPhone Photogrophy")
+                    NavigationLink (destination: DetailViewControllerRepresentable(videoURL: lesson.videoUrl).navigationBarTitleDisplayMode(.inline) ) {
+                        
+                        HStack {
+                            Image("test")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 60, height: 60)
+                            Text(String(lesson.name))
+                        }
                     }
                 }
+                .listStyle(.plain)
+                .navigationBarTitle("Lessons")
             }
-            .listStyle(.plain)
-            .navigationBarTitle("Lessons")
+            
+            ProgressView("Fetching Data")
+                .isHidden(!self.lessonsViewModel.fetchingData)
+                .foregroundColor(.white)
         }
         .onAppear {
-//            self.networkManager.fetchData()
+            self.lessonsViewModel.fetchLesson()
+            AppDelegate.orientationLock = .portrait
+        }
+        .alert(isPresented: self.$lessonsViewModel.showError) {
+            Alert (
+                title: Text("Network error"),
+                message: Text(self.lessonsViewModel.errorDescription),
+                dismissButton: .cancel()
+            )
+        }
+        .onDisappear() {
+            AppDelegate.orientationLock = .all
         }
     }
 }
-
-
 
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
         VideoListsView()
     }
-}
-
-struct Post: Identifiable {
-    var id: String
-    var name: String
 }

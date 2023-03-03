@@ -11,30 +11,44 @@ import Combine
 class NetworkManager {
     
     private var cancellableSet: Set<AnyCancellable> = []
-
+    private let apiQueue = DispatchQueue(label: "API", qos: .default, attributes: .concurrent)
    
-    func fetchData() {
+    static let shared = NetworkManager()
+    
+    private init () { }
+    
+    func fetchData() -> AnyPublisher<Lessons, Error> {
         
-        guard let url = URL(string: "https://iphonephotographyschool.com/test-api/lessons") else { return }
+        guard let url = URL(string: "https://iphonephotographyschool.com/test-api/lessons") else { return Empty<Lessons, Error>().eraseToAnyPublisher() }
         
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        let subscription = URLSession.shared
+        return URLSession.shared
             .dataTaskPublisher(for: url)
+            .receive(on: apiQueue)
             .map(\.data)
             .decode(type: Lessons.self, decoder: decoder)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                
-                if case .failure(let err) = completion {
-                    print("Retrieving data failed with error \(err)")
-                }
-                
-            }, receiveValue: { data in
-                print("Retrieved data of size \(data.lessons)")
-            })
-            .store(in: &cancellableSet)
+            .catch{ _ in Empty<Lessons, Error>() }
+            .eraseToAnyPublisher()
     }
+}
 
+
+enum Error: LocalizedError {
+    
+    case addressUnreachable(URL)
+    case invalidResponse
+    
+    var errorDescription: String? {
+        
+        switch self {
+            
+        case .addressUnreachable:
+            return "Couldn't reach the server"
+            
+        case .invalidResponse:
+            return "The server return invalid response"
+        }
+    }
 }

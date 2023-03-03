@@ -7,6 +7,8 @@
 
 import UIKit
 import SwiftUI
+import AVFoundation
+import AVKit
 
 class DetailViewController: UIViewController {
     
@@ -18,9 +20,40 @@ class DetailViewController: UIViewController {
     let videoDetailLabel = UILabel()
     let nextLessonButton = UIButton()
     
+    private var player : AVPlayer!
+    private var playerLayer: AVPlayerLayer!
+    private var playerViewController: AVPlayerViewController!
+    var videoURL = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        AppDelegate.orientationLock = .all
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        playVideo(url: videoURL)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        DispatchQueue.main.async {
+            self.player.pause()
+            self.playerViewController.player?.pause()
+            self.playerViewController.removeFromParent()
+            self.player = nil
+        }
+    }
+    
+    func setupViews() {
         setupNavigationBarItems()
         setupVideoView()
         setupScrollView()
@@ -43,7 +76,7 @@ class DetailViewController: UIViewController {
     func setupVideoView() {
         view.addSubview(videoView)
         
-        videoView.backgroundColor = .yellow
+        videoView.backgroundColor = .black
         videoView.translatesAutoresizingMaskIntoConstraints = false
         
         let heightConstraint = view.bounds.height * 0.30
@@ -59,16 +92,16 @@ class DetailViewController: UIViewController {
     func setupScrollView(){
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContainer)
-
+        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollViewContainer.translatesAutoresizingMaskIntoConstraints = false
-       
+        
         NSLayoutConstraint.activate([
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.topAnchor.constraint(equalTo: videoView.bottomAnchor, constant: 20),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
+            
             scrollViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollViewContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -111,7 +144,7 @@ class DetailViewController: UIViewController {
         
         nextLessonButton.translatesAutoresizingMaskIntoConstraints = false
         nextLessonButton.setTitleColor(#colorLiteral(red: 0.04547598958, green: 0.5179845095, blue: 1, alpha: 1), for: .normal)
-        nextLessonButton.setTitle("Download ", for: .normal)
+        nextLessonButton.setTitle("Next lesson ", for: .normal)
         nextLessonButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         
         nextLessonButton.semanticContentAttribute = UIApplication.shared
@@ -123,12 +156,41 @@ class DetailViewController: UIViewController {
             nextLessonButton.bottomAnchor.constraint(equalTo: scrollViewContainer.bottomAnchor)
         ])
     }
+    
+    func playVideo(url: String) {
+        
+        if player != nil {
+            player.play()
+            return
+        }
+        
+        //        guard let path = Bundle.main.path(forResource: url, ofType: "mp4") else { return }
+        
+        playerViewController = AVPlayerViewController()
+        player = AVPlayer(url: URL(string: url)!)
+        player.actionAtItemEnd = .none
+        
+        playerViewController.player = player
+        
+        self.addChild(playerViewController)
+        self.videoView.addSubview(playerViewController.view)
+        
+        playerViewController.view.frame = self.videoView.frame
+        playerViewController.player!.play()
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        print("change orientation")
+    }
 }
 
 struct DetailViewControllerRepresentable: UIViewControllerRepresentable {
     
+    var videoURL = ""
+    
     func makeUIViewController(context: Context) -> some UIViewController {
         let controller = DetailViewController()
+        controller.videoURL = self.videoURL
         return controller
     }
     

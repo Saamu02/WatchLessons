@@ -5,8 +5,10 @@
 //  Created by Ussama Irfan on 02/03/2023.
 //
 
-import Foundation
 import Combine
+import Network
+import CoreData
+import UIKit
 
 class LessonsListsViewModel: ObservableObject {
     
@@ -17,18 +19,35 @@ class LessonsListsViewModel: ObservableObject {
     @Published var errorDescription = ""
     @Published var showError = false
     @Published var fetchingData = true
+    @Published var networkStatus: NWPath.Status = .satisfied
+    @Published var image: UIImage?
     
     private var isConnectedToInternet = true
+    private let monitorQueue = DispatchQueue(label: "monitor")
+    private var coreDataManager = CoreDataManager()
     
     func fetchLesson() {
-        
-        if isConnectedToInternet {
-            fetchLesssonsFromAPI()
-            
-        } else {
-            showError = true
-            errorDescription = ErrorDescription.noInternetConnect
-        }
+        checkConnectivity()
+    }
+    
+    func checkConnectivity() {
+
+        NWPathMonitor()
+            .publisher(queue: monitorQueue)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                guard let self else { return }
+                
+                switch status {
+                    
+                case .satisfied:
+                    self.fetchLesssonsFromAPI()
+                                
+                default:
+                    self.fetchLessonsFromCoreData()
+                }
+            }
+            .store(in: &cancellableSet)
     }
     
     func fetchLesssonsFromAPI() {
@@ -52,10 +71,21 @@ class LessonsListsViewModel: ObservableObject {
                 
                 receiveValue: { [weak self] in
                     guard let self else { return }
-                    self.showError = false
-                    self.lessons = $0.lessons }
+                    
+                    self.coreDataManager.deleteAllData()
+                    
+                    for lesson in $0.lessons {
+                        self.coreDataManager.createData(lessonData: lesson)
+                    }
+                    
+                    self.fetchLessonsFromCoreData()
+                }
             )
             .store(in: &cancellableSet)
-
+    }
+    
+    func fetchLessonsFromCoreData() {
+        self.fetchingData = false
+        self.lessons = coreDataManager.fetchLessonsData()
     }
 }

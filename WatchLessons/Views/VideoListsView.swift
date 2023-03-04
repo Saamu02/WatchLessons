@@ -19,13 +19,18 @@ struct VideoListsView: View {
 
                 List(lessonsViewModel.lessons) { lesson in
                     
-                    NavigationLink (destination: DetailViewControllerRepresentable(videoURL: lesson.videoUrl).navigationBarTitleDisplayMode(.inline) ) {
+                    NavigationLink (destination: DetailViewControllerRepresentable(lessonList: lessonsViewModel.lessons, currrentLesson: lesson).navigationBarTitleDisplayMode(.inline) ) {
                         
                         HStack {
-                            Image("test")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 60, height: 60)
+
+                            AsyncImage(url: URL(string: lesson.thumbnail)) { image in
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 60, height: 60)
+
+                            } placeholder: {
+                                ProgressView()
+                            }
                             Text(String(lesson.name))
                         }
                     }

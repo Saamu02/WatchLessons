@@ -22,6 +22,15 @@
 		0405F64429B187D6007423F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64329B187D6007423F5 /* AppDelegate.swift */; };
 		0405F64529B187D6007423F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64329B187D6007423F5 /* AppDelegate.swift */; };
 		0405F64629B187D6007423F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64329B187D6007423F5 /* AppDelegate.swift */; };
+		0405F64829B1FCB8007423F5 /* NWPathMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64729B1FCB8007423F5 /* NWPathMonitor.swift */; };
+		0405F64929B1FCB8007423F5 /* NWPathMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64729B1FCB8007423F5 /* NWPathMonitor.swift */; };
+		0405F64A29B1FCB8007423F5 /* NWPathMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64729B1FCB8007423F5 /* NWPathMonitor.swift */; };
+		0405F64D29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64B29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld */; };
+		0405F64E29B20241007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64B29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld */; };
+		0405F64F29B20241007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405F64B29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld */; };
+		04878A2829B3438A008D958E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04878A2729B3438A008D958E /* CoreDataManager.swift */; };
+		04878A2929B3438A008D958E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04878A2729B3438A008D958E /* CoreDataManager.swift */; };
+		04878A2A29B3438A008D958E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04878A2729B3438A008D958E /* CoreDataManager.swift */; };
 		04A914E829AF1D8200AB760C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A914E729AF1D8200AB760C /* DetailViewController.swift */; };
 		04A914E929AF1D8200AB760C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A914E729AF1D8200AB760C /* DetailViewController.swift */; };
 		04A914EA29AF1D8200AB760C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A914E729AF1D8200AB760C /* DetailViewController.swift */; };
@@ -63,6 +72,9 @@
 		0405F63B29B17179007423F5 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		0405F63F29B18270007423F5 /* LessonDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailsViewModel.swift; sourceTree = "<group>"; };
 		0405F64329B187D6007423F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0405F64729B1FCB8007423F5 /* NWPathMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWPathMonitor.swift; sourceTree = "<group>"; };
+		0405F64C29B20240007423F5 /* WatchLesssonsCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WatchLesssonsCoreData.xcdatamodel; sourceTree = "<group>"; };
+		04878A2729B3438A008D958E /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		04A914E729AF1D8200AB760C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		04A914EF29AF49B800AB760C /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		04A914F329AF4C0700AB760C /* LessonsDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsDataModel.swift; sourceTree = "<group>"; };
@@ -115,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				0405F63B29B17179007423F5 /* View.swift */,
+				0405F64729B1FCB8007423F5 /* NWPathMonitor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -122,6 +135,7 @@
 		04BAF04729AF135F00A8B3E7 = {
 			isa = PBXGroup;
 			children = (
+				0405F64B29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld */,
 				04BAF05229AF135F00A8B3E7 /* WatchLessons */,
 				04BAF06329AF136600A8B3E7 /* WatchLessonsTests */,
 				04BAF06D29AF136600A8B3E7 /* WatchLessonsUITests */,
@@ -192,8 +206,9 @@
 		04BAF07F29AF142E00A8B3E7 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				04A914EF29AF49B800AB760C /* NetworkManager.swift */,
 				04A914F329AF4C0700AB760C /* LessonsDataModel.swift */,
+				04A914EF29AF49B800AB760C /* NetworkManager.swift */,
+				04878A2729B3438A008D958E /* CoreDataManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -339,9 +354,12 @@
 			files = (
 				0405F63C29B17179007423F5 /* View.swift in Sources */,
 				04A914F029AF49B800AB760C /* NetworkManager.swift in Sources */,
+				0405F64D29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */,
 				0405F64029B18270007423F5 /* LessonDetailsViewModel.swift in Sources */,
 				04A914E829AF1D8200AB760C /* DetailViewController.swift in Sources */,
+				0405F64829B1FCB8007423F5 /* NWPathMonitor.swift in Sources */,
 				0405F62F29B0A572007423F5 /* LessonsListViewModel.swift in Sources */,
+				04878A2829B3438A008D958E /* CoreDataManager.swift in Sources */,
 				04BAF05629AF135F00A8B3E7 /* VideoListsView.swift in Sources */,
 				0405F63729B16E29007423F5 /* Constants.swift in Sources */,
 				04BAF05429AF135F00A8B3E7 /* WatchLessonsApp.swift in Sources */,
@@ -356,10 +374,13 @@
 			files = (
 				04A914F129AF49B800AB760C /* NetworkManager.swift in Sources */,
 				04BAF06529AF136600A8B3E7 /* WatchLessonsTests.swift in Sources */,
+				0405F64929B1FCB8007423F5 /* NWPathMonitor.swift in Sources */,
 				0405F63029B0A572007423F5 /* LessonsListViewModel.swift in Sources */,
 				0405F64529B187D6007423F5 /* AppDelegate.swift in Sources */,
 				04A914E929AF1D8200AB760C /* DetailViewController.swift in Sources */,
+				04878A2929B3438A008D958E /* CoreDataManager.swift in Sources */,
 				04A914F529AF4C0700AB760C /* LessonsDataModel.swift in Sources */,
+				0405F64E29B20241007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */,
 				0405F64129B18270007423F5 /* LessonDetailsViewModel.swift in Sources */,
 				0405F63D29B17179007423F5 /* View.swift in Sources */,
 				0405F63829B16E29007423F5 /* Constants.swift in Sources */,
@@ -372,9 +393,12 @@
 			files = (
 				0405F63E29B17179007423F5 /* View.swift in Sources */,
 				04A914F229AF49B800AB760C /* NetworkManager.swift in Sources */,
+				0405F64F29B20241007423F5 /* WatchLessonsCoreData.xcdatamodeld in Sources */,
 				0405F64229B18270007423F5 /* LessonDetailsViewModel.swift in Sources */,
 				04A914EA29AF1D8200AB760C /* DetailViewController.swift in Sources */,
+				0405F64A29B1FCB8007423F5 /* NWPathMonitor.swift in Sources */,
 				0405F63129B0A572007423F5 /* LessonsListViewModel.swift in Sources */,
+				04878A2A29B3438A008D958E /* CoreDataManager.swift in Sources */,
 				04BAF07129AF136600A8B3E7 /* WatchLessonsUITestsLaunchTests.swift in Sources */,
 				0405F63929B16E29007423F5 /* Constants.swift in Sources */,
 				04BAF06F29AF136600A8B3E7 /* WatchLessonsUITests.swift in Sources */,
@@ -687,6 +711,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		0405F64B29B20240007423F5 /* WatchLessonsCoreData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0405F64C29B20240007423F5 /* WatchLesssonsCoreData.xcdatamodel */,
+			);
+			currentVersion = 0405F64C29B20240007423F5 /* WatchLesssonsCoreData.xcdatamodel */;
+			path = WatchLessonsCoreData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 04BAF04829AF135F00A8B3E7 /* Project object */;
 }

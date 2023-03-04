@@ -10,7 +10,6 @@ import Combine
 
 class NetworkManager {
     
-    private var cancellableSet: Set<AnyCancellable> = []
     private let apiQueue = DispatchQueue(label: "API", qos: .default, attributes: .concurrent)
    
     static let shared = NetworkManager()
@@ -33,7 +32,6 @@ class NetworkManager {
             .eraseToAnyPublisher()
     }
 }
-
 
 enum Error: LocalizedError {
     

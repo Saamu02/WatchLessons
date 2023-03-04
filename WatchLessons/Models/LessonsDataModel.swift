@@ -11,12 +11,19 @@ struct Lessons: Decodable {
     let lessons: [Lesson]
 }
 
-struct Lesson: Decodable, Identifiable {
-    var id: Int
-    let name: String
-    let description: String
-    let url: String?
-    let thumbnail: String
-    let videoUrl: String
+struct Lesson: Decodable, Identifiable, Equatable {
+    var id: Int?
+    var name: String
+    var description: String
+    var thumbnail: String
+    var videoUrl: String
+    
+    init() {
+        id = nil
+        name = ""
+        description = ""
+        thumbnail = ""
+        videoUrl = ""
+    }
 }
 

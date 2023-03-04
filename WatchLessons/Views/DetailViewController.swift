@@ -9,26 +9,33 @@ import UIKit
 import SwiftUI
 import AVFoundation
 import AVKit
+import Combine
 
 class DetailViewController: UIViewController {
     
-    let videoView = UIView()
-    
-    let scrollView = UIScrollView()
-    let scrollViewContainer = UIView()
-    let videoTitleLabel = UILabel()
-    let videoDetailLabel = UILabel()
-    let nextLessonButton = UIButton()
+    private let videoView = UIView()
+    private let scrollView = UIScrollView()
+    private let scrollViewContainer = UIView()
+    private let videoTitleLabel = UILabel()
+    private let videoDetailLabel = UILabel()
+    private let nextLessonButton = UIButton()
+    private let activityView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     private var player : AVPlayer!
     private var playerLayer: AVPlayerLayer!
     private var playerViewController: AVPlayerViewController!
+
+    var lessonsList = [Lesson]()
+    var currrentLesson = Lesson()
+    var currentIndex = -1
     var videoURL = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupViews()
+
+        currentIndex = lessonsList.firstIndex(of: currrentLesson)!
+        setupViewsConstraints()
+        confiugureDataSourceForViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,22 +51,22 @@ class DetailViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
-        DispatchQueue.main.async {
-            self.player.pause()
-            self.playerViewController.player?.pause()
-            self.playerViewController.removeFromParent()
-            self.player = nil
-        }
+        removePlayer()
     }
     
-    func setupViews() {
+    func setupViewsConstraints() {
         setupNavigationBarItems()
         setupVideoView()
         setupScrollView()
         setupVideoTitleLabel()
         setupVideoDetailLabel()
         setupNextLessonButton()
+    }
+    
+    func confiugureDataSourceForViews() {
+        videoTitleLabel.text = currrentLesson.name
+        videoDetailLabel.text = currrentLesson.description
+        videoURL = currrentLesson.videoUrl
     }
     
     func setupNavigationBarItems() {
@@ -113,7 +120,6 @@ class DetailViewController: UIViewController {
         scrollViewContainer.addSubview(videoTitleLabel)
         
         videoTitleLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
-        videoTitleLabel.text = "Video Title"
         videoTitleLabel.textColor = .white
         videoTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -155,6 +161,37 @@ class DetailViewController: UIViewController {
             nextLessonButton.trailingAnchor.constraint(equalTo: scrollViewContainer.trailingAnchor, constant: -20),
             nextLessonButton.bottomAnchor.constraint(equalTo: scrollViewContainer.bottomAnchor)
         ])
+        
+        nextLessonButton.addTarget(self, action:  #selector(nextButtonAction), for: .touchUpInside)
+    }
+    
+    @objc func nextButtonAction() {
+        
+        if lessonsList.indices.contains(currentIndex + 1) {
+            self.playerViewController.player?.pause()
+            self.playerViewController.player = nil
+            self.player.pause()
+            self.player = nil
+            
+            currentIndex += 1
+            currrentLesson = lessonsList[currentIndex]
+            confiugureDataSourceForViews()
+            playVideo(url: videoURL)
+        }
+    }
+    
+    func removePlayer() {
+        
+        if player == nil {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.player.pause()
+            self.player = nil
+            self.playerViewController.player?.pause()
+            self.playerViewController.removeFromParent()
+        }
     }
     
     func playVideo(url: String) {
@@ -166,7 +203,10 @@ class DetailViewController: UIViewController {
         
         //        guard let path = Bundle.main.path(forResource: url, ofType: "mp4") else { return }
         
-        playerViewController = AVPlayerViewController()
+        if playerViewController == nil {
+            playerViewController = AVPlayerViewController()
+        }
+        
         player = AVPlayer(url: URL(string: url)!)
         player.actionAtItemEnd = .none
         
@@ -179,6 +219,21 @@ class DetailViewController: UIViewController {
         playerViewController.player!.play()
     }
     
+    func downloadVideo() {
+        
+        DispatchQueue.global(qos: .background).async {
+
+            if let url = URL(string: self.currrentLesson.videoUrl), let urlData = NSData(contentsOf: url) {
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
+                let filePath="\(documentsPath)/tempFile.mp4"
+                
+                DispatchQueue.main.async {
+                    urlData.write(toFile: filePath, atomically: true)
+                }
+            }
+        }
+    }
+    
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         print("change orientation")
     }
@@ -186,11 +241,13 @@ class DetailViewController: UIViewController {
 
 struct DetailViewControllerRepresentable: UIViewControllerRepresentable {
     
-    var videoURL = ""
+    var lessonList = [Lesson]()
+    var currrentLesson = Lesson()
     
     func makeUIViewController(context: Context) -> some UIViewController {
         let controller = DetailViewController()
-        controller.videoURL = self.videoURL
+        controller.lessonsList = self.lessonList
+        controller.currrentLesson = self.currrentLesson
         return controller
     }
     

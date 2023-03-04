@@ -26,7 +26,24 @@ final class WatchLessonsUITests: XCTestCase {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
-
+        
+        let collectionViewsQuery = app.collectionViews
+        XCTAssert(collectionViewsQuery.element.exists)
+        collectionViewsQuery/*@START_MENU_TOKEN@*/.buttons["The Key To Success In iPhone Photography"]/*[[".cells.buttons[\"The Key To Success In iPhone Photography\"]",".buttons[\"The Key To Success In iPhone Photography\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        
+        let nextLessonButton = app.scrollViews.otherElements/*@START_MENU_TOKEN@*/.staticTexts["Next lesson "]/*[[".buttons[\"Next lesson \"].staticTexts[\"Next lesson \"]",".staticTexts[\"Next lesson \"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        XCTAssert(nextLessonButton.exists)
+        nextLessonButton.tap()
+        
+        let backButton = app.navigationBars["_TtGC7SwiftUI19UIHosting"].buttons["Lessons"]
+        XCTAssert(backButton.exists)
+        backButton.tap()
+        
+        collectionViewsQuery/*@START_MENU_TOKEN@*/.buttons["3 Secret iPhone Camera Features For Perfect Focus"]/*[[".cells.buttons[\"3 Secret iPhone Camera Features For Perfect Focus\"]",".buttons[\"3 Secret iPhone Camera Features For Perfect Focus\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        
+        let downloadButton = app.navigationBars["Lessons"].buttons[" Download"]
+        XCTAssert(downloadButton.exists)
+        downloadButton.tap()
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 

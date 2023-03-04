@@ -54,7 +54,6 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        fileName = "\(currrentLesson.name)_\(currrentLesson.id!)"
         currentIndex = lessonsList.firstIndex(of: currrentLesson)!
         setupViewsConstraints()
         confiugureDataSourceForViews()
@@ -78,9 +77,7 @@ class DetailViewController: UIViewController {
     
     func setupViewsConstraints() {
         
-        if !lessonDetailViewModel.ifFileExist(fileName: fileName) {
-            setupNavigationBarItems()
-        }
+        setupNavigationBarItems()
         setupVideoView()
         setupScrollView()
         setupVideoTitleLabel()
@@ -90,6 +87,15 @@ class DetailViewController: UIViewController {
     }
     
     func confiugureDataSourceForViews() {
+        
+        fileName = "\(currrentLesson.name)_\(currrentLesson.id!)"
+        
+        if lessonDetailViewModel.ifFileExist(fileName: fileName) {
+            self.parent?.navigationItem.rightBarButtonItem?.isHidden = true
+            
+        } else {
+            self.parent?.navigationItem.rightBarButtonItem?.isHidden = false
+        }
         videoTitleLabel.text = currrentLesson.name
         videoDetailLabel.text = currrentLesson.description
         videoURL = currrentLesson.videoUrl

@@ -19,7 +19,9 @@ class DetailViewController: UIViewController {
     private let videoTitleLabel = UILabel()
     private let videoDetailLabel = UILabel()
     private let nextLessonButton = UIButton()
-    private let activityView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+    private let progressView = UIProgressView()
+    private let progressViewContainerView = UIView()
+    private let progressLabel = UILabel()
     
     private var player : AVPlayer!
     private var playerLayer: AVPlayerLayer!
@@ -30,9 +32,29 @@ class DetailViewController: UIViewController {
     var currentIndex = -1
     var videoURL = ""
     
+    private var lessonDetailViewModel = LessonDetailViewModel()
+    
+    private var progressStatus = ""
+    private var fileName = ""
+    
+    private var task : URLSessionTask!
+    
+    lazy var session : URLSession = {
+        let config = URLSessionConfiguration.ephemeral
+        config.allowsCellularAccess = false
+        let session = URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
+        return session
+    }()
+    
+    
+    private var percentageWritten:Float = 0.0
+    private var taskTotalBytesWritten = 0
+    private var taskTotalBytesExpectedToWrite = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        fileName = "\(currrentLesson.name)_\(currrentLesson.id!)"
         currentIndex = lessonsList.firstIndex(of: currrentLesson)!
         setupViewsConstraints()
         confiugureDataSourceForViews()
@@ -55,12 +77,16 @@ class DetailViewController: UIViewController {
     }
     
     func setupViewsConstraints() {
-        setupNavigationBarItems()
+        
+        if !lessonDetailViewModel.ifFileExist(fileName: fileName) {
+            setupNavigationBarItems()
+        }
         setupVideoView()
         setupScrollView()
         setupVideoTitleLabel()
         setupVideoDetailLabel()
         setupNextLessonButton()
+        setupProgressView()
     }
     
     func confiugureDataSourceForViews() {
@@ -78,6 +104,8 @@ class DetailViewController: UIViewController {
         DispatchQueue.main.async {
             self.parent?.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         }
+        
+        button.addTarget(self, action:  #selector(downloadVideo), for: .touchUpInside)
     }
     
     func setupVideoView() {
@@ -165,6 +193,49 @@ class DetailViewController: UIViewController {
         nextLessonButton.addTarget(self, action:  #selector(nextButtonAction), for: .touchUpInside)
     }
     
+    func setupProgressView() {
+        view.addSubview(progressViewContainerView)
+        
+        progressViewContainerView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        progressViewContainerView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.9)
+        
+        progressViewContainerView.addSubview(progressView)
+        progressViewContainerView.addSubview(progressLabel)
+        
+        progressLabel.textColor = .white
+        progressLabel.text = "Please wait while we are downloading your file"
+        progressLabel.numberOfLines = 0
+        progressLabel.textAlignment = .center
+        
+        let progressViewWidth = view.bounds.width * 0.75
+        
+        NSLayoutConstraint.activate([
+            progressViewContainerView.topAnchor.constraint(equalTo: view.topAnchor),
+            progressViewContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressViewContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            progressViewContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            progressView.widthAnchor.constraint(equalToConstant: progressViewWidth),
+            progressView.heightAnchor.constraint(equalToConstant: 4),
+            progressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            progressLabel.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 10),
+            progressLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            progressLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 10)
+        ])
+        
+        progressView.setProgress(0.0, animated: true)
+        progressViewContainerView.isHidden = true
+    }
+    
+    func showProgressView(show: Bool) {
+        progressViewContainerView.isHidden = !show
+    }
+    
     @objc func nextButtonAction() {
         
         if lessonsList.indices.contains(currentIndex + 1) {
@@ -201,13 +272,19 @@ class DetailViewController: UIViewController {
             return
         }
         
-        //        guard let path = Bundle.main.path(forResource: url, ofType: "mp4") else { return }
+        playerViewController = AVPlayerViewController()
         
-        if playerViewController == nil {
-            playerViewController = AVPlayerViewController()
+        if lessonDetailViewModel.ifFileExist(fileName: fileName) {
+            let fileManager = FileManager.default
+            let docsurl = try! fileManager.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            let path = docsurl.appendingPathComponent("\(fileName).mp4")
+            
+            player = AVPlayer(url: path)
+
+        } else {
+            player = AVPlayer(url: URL(string: url)!)
         }
         
-        player = AVPlayer(url: URL(string: url)!)
         player.actionAtItemEnd = .none
         
         playerViewController.player = player
@@ -219,23 +296,62 @@ class DetailViewController: UIViewController {
         playerViewController.player!.play()
     }
     
-    func downloadVideo() {
+    @objc func downloadVideo() {
+        self.parent?.navigationItem.leftBarButtonItem?.isHidden = true
+        self.parent?.navigationItem.rightBarButtonItem?.isHidden = true
         
-        DispatchQueue.global(qos: .background).async {
-
-            if let url = URL(string: self.currrentLesson.videoUrl), let urlData = NSData(contentsOf: url) {
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
-                let filePath="\(documentsPath)/tempFile.mp4"
-                
-                DispatchQueue.main.async {
-                    urlData.write(toFile: filePath, atomically: true)
-                }
-            }
+        playerViewController.player?.pause()
+        progressStatus = "0%"
+        
+        if self.task != nil {
+            return
         }
+        
+        let url =  URL(string: currrentLesson.videoUrl)
+        let req = URLRequest(url: url!)
+        let task = self.session.downloadTask(with: req)
+        self.task = task
+        
+        showProgressView(show: true)
+        task.resume()
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         print("change orientation")
+    }
+}
+
+extension DetailViewController: URLSessionDownloadDelegate {
+
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        showProgressView(show: false)
+        lessonDetailViewModel.saveFileAtDocumentDir(at: location, fileName: fileName)
+        self.parent?.navigationItem.leftBarButtonItem?.isHidden = false
+        print("Finished downloading!")
+        
+        if lessonDetailViewModel.ifFileExist(fileName: fileName) {
+            self.parent?.navigationItem.rightBarButtonItem?.isHidden = true
+        }
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten writ: Int64, totalBytesExpectedToWrite exp: Int64) {
+        print("downloaded \(100*writ/exp)")
+        
+        taskTotalBytesWritten = Int(writ)
+        taskTotalBytesExpectedToWrite = Int(exp)
+        percentageWritten = Float(taskTotalBytesWritten) / Float(taskTotalBytesExpectedToWrite)
+        progressView.progress = percentageWritten
+        progressStatus = String(format: "%.01f", percentageWritten*100) + "%"
+        progressLabel.text = "Please wait while we are downloading file \n (\(progressStatus))"
+        print(progressStatus)
+    }
+
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
+        // unused in this example
+    }
+
+    private func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: NSError?) {
+        print("completed: error: \(String(describing: error))")
     }
 }
 

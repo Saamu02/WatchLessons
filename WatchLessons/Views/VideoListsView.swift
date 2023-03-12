@@ -49,7 +49,7 @@ struct VideoListsView: View {
         }
         .alert(isPresented: self.$lessonsViewModel.showError) {
             Alert (
-                title: Text("Network error"),
+                title: Text("Alert!"),
                 message: Text(self.lessonsViewModel.errorDescription),
                 dismissButton: .cancel()
             )

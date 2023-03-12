@@ -25,5 +25,14 @@ struct Lesson: Decodable, Identifiable, Equatable {
         thumbnail = ""
         videoUrl = ""
     }
+    
+    init(id: Int, name: String, description: String, thumbnail: String, videoUrl: String) {
+        
+        self.id = id
+        self.name = name
+        self.description = description
+        self.thumbnail = thumbnail
+        self.videoUrl = videoUrl
+    }
 }
 

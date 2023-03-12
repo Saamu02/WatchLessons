@@ -7,7 +7,7 @@
 
 import CoreData
 
-class CoreDataManager: NSObject {
+class CoreDataManager: NSObject, CoreDataManagerProtocol {
     
     private static var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "WatchLessonsCoreData")
@@ -67,7 +67,7 @@ class CoreDataManager: NSObject {
         }
     }
     
-    func fetchLessonsData() -> [Lesson] {
+    func fetchLessonsData() throws -> [Lesson] {
         var lessonsArray = [Lesson]()
         
         let fetchRequest: NSFetchRequest<WatchLessonsData>
@@ -87,7 +87,7 @@ class CoreDataManager: NSObject {
             }
             
         } catch {
-            print(error)
+            throw error
         }
         
         return lessonsArray

@@ -45,22 +45,4 @@ class LessonDetailViewModel {
             print("File not saved")
         }
     }
-    
-    func docFiles() {
-        
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
-        do {
-            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            
-            for url in fileURLs {
-                print(url)
-            }
-            
-        } catch {
-            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
-        }
-
-    }
 }

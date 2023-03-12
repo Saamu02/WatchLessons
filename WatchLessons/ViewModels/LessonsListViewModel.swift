@@ -11,10 +11,7 @@ import CoreData
 import UIKit
 
 class LessonsListsViewModel: ObservableObject {
-    
-    private var cancellableSet: Set<AnyCancellable> = []
-    private let networkManager = NetworkManager.shared
-    
+        
     @Published var lessons = [Lesson]()
     @Published var errorDescription = ""
     @Published var showError = false
@@ -24,7 +21,14 @@ class LessonsListsViewModel: ObservableObject {
     
     private var isConnectedToInternet = true
     private let monitorQueue = DispatchQueue(label: "monitor")
-    private var coreDataManager = CoreDataManager()
+    private var coreDataManager: CoreDataManagerProtocol
+    private var networkManager: NetworkManagerProtocol
+    private var cancellableSet: Set<AnyCancellable> = []
+    
+    init(coreDataManager: CoreDataManagerProtocol = CoreDataManager(), networkManager: NetworkManagerProtocol = NetworkManager()) {
+        self.coreDataManager = coreDataManager
+        self.networkManager = networkManager
+    }
     
     func fetchLesson() {
         checkConnectivity()
@@ -72,7 +76,9 @@ class LessonsListsViewModel: ObservableObject {
                 receiveValue: { [weak self] in
                     guard let self else { return }
                     
-                    self.coreDataManager.deleteAllData()
+                    print($0.lessons)
+                    print($0.lessons.count)
+                    self.deleteLessonsFromCoreData()
                     
                     for lesson in $0.lessons {
                         self.coreDataManager.createData(lessonData: lesson)
@@ -86,6 +92,17 @@ class LessonsListsViewModel: ObservableObject {
     
     func fetchLessonsFromCoreData() {
         self.fetchingData = false
-        self.lessons = coreDataManager.fetchLessonsData()
+        
+        do {
+            self.lessons = try coreDataManager.fetchLessonsData()
+            
+        } catch {
+            self.showError = true
+            self.errorDescription = "Please make sure you are connected to the internet to recieve value"
+        }
+    }
+    
+    func deleteLessonsFromCoreData() {
+        self.coreDataManager.deleteAllData()
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 @testable import WatchLessons
 
-class MockNetworkManager: NetworkManagerProtocol {
+class MockLessonsListNetworkManager: LessonListsNetworkManagerProtocol {
     
     var shouldFail: Bool = false
     

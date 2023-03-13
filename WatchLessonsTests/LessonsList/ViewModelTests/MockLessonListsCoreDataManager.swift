@@ -1,5 +1,5 @@
 //
-//  MockCoreDataManager.swift
+//  MockLessonListsCoreDataManager.swift
 //  WatchLessonsTests
 //
 //  Created by Ussama Irfan on 12/03/2023.
@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 @testable import WatchLessons
 
-class MockCoreDataManager: CoreDataManagerProtocol {
+class MockLessonListsCoreDataManager: LessonListsCoreDataManagerProtocol {
     
     var shouldFail: Bool = false
     var mockLessons = [Lesson]()

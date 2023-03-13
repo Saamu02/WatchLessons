@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  LessonListsCoreDataManager.swift
 //  WatchLessons
 //
 //  Created by Ussama Irfan on 04/03/2023.
@@ -7,38 +7,8 @@
 
 import CoreData
 
-class CoreDataManager: NSObject, CoreDataManagerProtocol {
-    
-    private static var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "WatchLessonsCoreData")
+class LessonListsCoreDataManager: CoreDataManager, LessonListsCoreDataManagerProtocol {
         
-        container.loadPersistentStores { description, error in
-            
-            if let error = error {
-                fatalError("Unable to load persistent stores: \(error)")
-            }
-        }
-        return container
-    }()
-    
-    var context: NSManagedObjectContext {
-        return Self.persistentContainer.viewContext
-    }
-    
-    func saveContext () {
-        
-        if context.hasChanges {
-            
-            do {
-                try context.save()
-                
-            } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
-    
     func createData(lessonData: Lesson) {
         let entry = WatchLessonsData(context: context)
         entry.image = lessonData.thumbnail
@@ -60,7 +30,7 @@ class CoreDataManager: NSObject, CoreDataManagerProtocol {
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 
         do {
-            try CoreDataManager.persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: context)
+            try persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: context)
             
         } catch {
             print(error)

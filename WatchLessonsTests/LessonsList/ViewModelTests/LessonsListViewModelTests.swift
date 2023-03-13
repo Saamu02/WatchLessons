@@ -12,30 +12,29 @@ import Combine
 final class LessonsListViewModelTests: XCTestCase {
     
     var sut: LessonsListsViewModel!
-    var mockNetworkManager: MockNetworkManager!
-    var mockCoreDataManager: MockCoreDataManager!
-
+    var mockLessonListsNetworkManager: MockLessonsListNetworkManager!
+    var mockLessonListsCoreDataManager: MockLessonListsCoreDataManager!
     
     override func setUp() {
         super.setUp()
-        mockNetworkManager = MockNetworkManager()
-        mockCoreDataManager = MockCoreDataManager()
+        mockLessonListsNetworkManager = MockLessonsListNetworkManager()
+        mockLessonListsCoreDataManager = MockLessonListsCoreDataManager()
 
-        sut = LessonsListsViewModel(coreDataManager: mockCoreDataManager, networkManager: mockNetworkManager)
+        sut = LessonsListsViewModel(lessonListsCoreDataManager: mockLessonListsCoreDataManager, lessonListsNetworkManager: mockLessonListsNetworkManager)
     }
 
     override func tearDown() {
         sut = nil
-        mockNetworkManager = nil
-        mockCoreDataManager = nil
+        mockLessonListsNetworkManager = nil
+        mockLessonListsCoreDataManager = nil
         super.tearDown()
     }
 
     func testLessonsListsViewModel_FetchLessonWhenConnected_ShouldReturnTheData() {
         
         // Arrange
-        mockNetworkManager.shouldFail = false
-        mockCoreDataManager.shouldFail = false
+        mockLessonListsNetworkManager.shouldFail = false
+        mockLessonListsCoreDataManager.shouldFail = false
         
         // Act
         sut.fetchLesson()
@@ -55,8 +54,8 @@ final class LessonsListViewModelTests: XCTestCase {
     func testLessonsListsViewModel_FetchLessonWhenNotConnected_ShouldReturnTheDataFromCoreData() async {
         
         // Arrange
-        mockNetworkManager.shouldFail = true
-        mockCoreDataManager.shouldFail = false
+        mockLessonListsNetworkManager.shouldFail = true
+        mockLessonListsCoreDataManager.shouldFail = false
         
         // Act
         sut.fetchLesson()
@@ -76,8 +75,8 @@ final class LessonsListViewModelTests: XCTestCase {
     func testLessonsListsViewModel_FetchLessonWhenErrorFetchingDataFromCoreData() {
         
         // Arrange
-        mockNetworkManager.shouldFail = true
-        mockCoreDataManager.shouldFail = true
+        mockLessonListsNetworkManager.shouldFail = true
+        mockLessonListsCoreDataManager.shouldFail = true
         
         // Act
         sut.fetchLessonsFromCoreData()

@@ -21,13 +21,13 @@ class LessonsListsViewModel: ObservableObject {
     
     private var isConnectedToInternet = true
     private let monitorQueue = DispatchQueue(label: "monitor")
-    private var coreDataManager: CoreDataManagerProtocol
-    private var networkManager: NetworkManagerProtocol
+    private var lessonListsCoreDataManager: LessonListsCoreDataManagerProtocol
+    private var lessonListsNetworkManager: LessonListsNetworkManagerProtocol
     private var cancellableSet: Set<AnyCancellable> = []
     
-    init(coreDataManager: CoreDataManagerProtocol = CoreDataManager(), networkManager: NetworkManagerProtocol = NetworkManager()) {
-        self.coreDataManager = coreDataManager
-        self.networkManager = networkManager
+    init(lessonListsCoreDataManager: LessonListsCoreDataManagerProtocol = LessonListsCoreDataManager(), lessonListsNetworkManager: LessonListsNetworkManagerProtocol = LessonListsNetworkManager()) {
+        self.lessonListsCoreDataManager = lessonListsCoreDataManager
+        self.lessonListsNetworkManager = lessonListsNetworkManager
     }
     
     func fetchLesson() {
@@ -56,7 +56,7 @@ class LessonsListsViewModel: ObservableObject {
     
     func fetchLesssonsFromAPI() {
         
-        networkManager.fetchData()
+        lessonListsNetworkManager.fetchData()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in
@@ -81,7 +81,7 @@ class LessonsListsViewModel: ObservableObject {
                     self.deleteLessonsFromCoreData()
                     
                     for lesson in $0.lessons {
-                        self.coreDataManager.createData(lessonData: lesson)
+                        self.lessonListsCoreDataManager.createData(lessonData: lesson)
                     }
                     
                     self.fetchLessonsFromCoreData()
@@ -94,7 +94,7 @@ class LessonsListsViewModel: ObservableObject {
         self.fetchingData = false
         
         do {
-            self.lessons = try coreDataManager.fetchLessonsData()
+            self.lessons = try lessonListsCoreDataManager.fetchLessonsData()
             
         } catch {
             self.showError = true
@@ -103,6 +103,6 @@ class LessonsListsViewModel: ObservableObject {
     }
     
     func deleteLessonsFromCoreData() {
-        self.coreDataManager.deleteAllData()
+        self.lessonListsCoreDataManager.deleteAllData()
     }
 }

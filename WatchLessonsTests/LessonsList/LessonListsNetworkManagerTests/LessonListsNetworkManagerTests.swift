@@ -1,5 +1,5 @@
 //
-//  WatchLessonsTests.swift
+//  LessonListsNetworkManagerTests.swift
 //  WatchLessonsTests
 //
 //  Created by Ussama Irfan on 01/03/2023.
@@ -9,9 +9,9 @@ import Combine
 import XCTest
 @testable import WatchLessons
 
-final class NetworkManagerTests: XCTestCase {
+final class LessonListsNetworkManagerTests: XCTestCase {
     
-    var sut: NetworkManager!
+    var sut: LessonListsNetworkManager!
     var cancellables: Set<AnyCancellable>!
     
     override class func setUp() {
@@ -26,7 +26,7 @@ final class NetworkManagerTests: XCTestCase {
         configuration.protocolClasses = [MockURLProtocol.self]
         let session = URLSession(configuration: configuration)
         
-        sut = NetworkManager(urlSession: session)
+        sut = LessonListsNetworkManager(urlSession: session)
         cancellables = Set()
     }
     
@@ -133,7 +133,7 @@ final class NetworkManagerTests: XCTestCase {
     func testFetchData_WhenGivenEmptyURL_ShouldReturnError() {
         
         // Arrange
-        sut = NetworkManager(url: "")
+        sut = LessonListsNetworkManager(url: "")
         
         let expectation = self.expectation(description: "Fetch Data expectation when url is empty string")
         

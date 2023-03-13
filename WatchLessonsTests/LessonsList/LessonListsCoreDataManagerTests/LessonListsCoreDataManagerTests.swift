@@ -1,5 +1,5 @@
 //
-//  CoreDataManagerTests.swift
+//  LessonListsCoreDataManagerTests.swift
 //  WatchLessonsTests
 //
 //  Created by Ussama Irfan on 12/03/2023.
@@ -9,20 +9,20 @@ import XCTest
 import CoreData
 @testable import WatchLessons
 
-final class CoreDataManagerTests: XCTestCase {
+final class LessonListsCoreDataManagerTests: XCTestCase {
     
-    var coreDataManager: CoreDataManager!
+    var sut: LessonListsCoreDataManager!
     
     override func setUp() {
         super.setUp()
         
-        coreDataManager = CoreDataManager()
-        coreDataManager.deleteAllData()
+        sut = LessonListsCoreDataManager()
+        sut.deleteAllData()
     }
     
     override func tearDown() {
-        coreDataManager.deleteAllData()
-        coreDataManager = nil
+        sut.deleteAllData()
+        sut = nil
         
         super.tearDown()
     }
@@ -33,12 +33,12 @@ final class CoreDataManagerTests: XCTestCase {
         let lesson = Lesson(id: 1, name: "Test Lesson", description: "Test Lesson Description", thumbnail: "Test thumbnail url", videoUrl: "Test video url")
         
         // Act
-        coreDataManager.createData(lessonData: lesson)
+        sut.createData(lessonData: lesson)
         
         var lessons: [Lesson]?
         
         do {
-            lessons = try coreDataManager.fetchLessonsData()
+            lessons = try sut.fetchLessonsData()
             
         } catch {
             XCTFail("Failed to fetch lessons from Core Data")
@@ -57,14 +57,14 @@ final class CoreDataManagerTests: XCTestCase {
         
         // Arrange
         let lesson = Lesson(id: 1, name: "Test Lesson", description: "Test Lesson Description", thumbnail: "Test thumbnail url", videoUrl: "Test video url")
-        coreDataManager.createData(lessonData: lesson)
+        sut.createData(lessonData: lesson)
         
         // Act
-        coreDataManager.deleteAllData()
+        sut.deleteAllData()
         
         var lessons: [Lesson]?
         do {
-            lessons = try coreDataManager.fetchLessonsData()
+            lessons = try sut.fetchLessonsData()
         } catch {
             XCTFail("Failed to fetch lessons from Core Data")
         }
@@ -73,6 +73,4 @@ final class CoreDataManagerTests: XCTestCase {
         XCTAssertNotNil(lessons)
         XCTAssertEqual(lessons?.count, 0)
     }
-    
-
 }

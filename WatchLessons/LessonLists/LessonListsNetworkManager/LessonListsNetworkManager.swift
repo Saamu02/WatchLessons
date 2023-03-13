@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  LessonListsNetworkManager.swift
 //  WatchLessons
 //
 //  Created by Ussama Irfan on 01/03/2023.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class NetworkManager: NetworkManagerProtocol {
+class LessonListsNetworkManager: LessonListsNetworkManagerProtocol {
     
     //    static let shared = NetworkManager()
     private var baseURL: String
